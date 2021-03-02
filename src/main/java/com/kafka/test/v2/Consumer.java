@@ -2,6 +2,7 @@ package com.kafka.test.v2;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.*;
 
 import org.apache.kafka.clients.consumer.*;
@@ -56,10 +57,15 @@ public class Consumer {
 //        订阅自动消费
         kafkaConsumer.subscribe(Arrays.asList("mykafka"));;// 订阅消息
         while (true) {
-            ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
-            for (ConsumerRecord<String, String> record : records) {
-                System.out.println(String.format("topic:%s,offset:%d,消息:%s", //
-                        record.topic(), record.offset(), record.value()));
+//            ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
+            try{
+                ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(3));
+                for (ConsumerRecord<String, String> record : records) {
+                    System.out.println(String.format("topic:%s,offset:%d,消息:%s", //
+                            record.topic(), record.offset(), record.value()));
+                }
+            } catch (Exception e){
+                System.out.println(e.getMessage());
             }
         }
 
